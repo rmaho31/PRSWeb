@@ -47,15 +47,14 @@ public class UserController {
 	}
 	
 	@PostMapping(path="/Change") 
-	public @ResponseBody String updateUser (@RequestBody User u) {
+	public @ResponseBody String updateUser(@RequestBody User u) {
 			userRepository.save(u);
 			return "Updated";
 	}
 	
-	@GetMapping(path="/Authenticate") 
-	public @ResponseBody User updateUser (@RequestParam String userName, 
-												@RequestParam String password) {
+	@PostMapping(path="/Authenticate") 
+	public @ResponseBody User authenticate(@RequestBody User u) {
 
-		return userRepository.findByUserNameAndPassword(userName, password).get();
+		return userRepository.findByUserNameAndPassword(u.getUserName(), u.getPassword()).get();
 	}
 }
