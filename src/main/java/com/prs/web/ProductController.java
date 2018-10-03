@@ -19,9 +19,8 @@ public class ProductController{
 	private ProductRepository productRepository;
 
 	@PostMapping(path="/Add") 
-	public @ResponseBody String addNewProduct (@RequestBody Product p) {
-				productRepository.save(p);
-		return "Saved";
+	public @ResponseBody Product addNewProduct (@RequestBody Product p) {
+		return productRepository.save(p);
 	}
 	
 	@GetMapping(path="/Get")
@@ -46,8 +45,7 @@ public class ProductController{
 	}
 	
 	@PostMapping(path="/Change") 
-	public @ResponseBody String updateProduct (@RequestBody Product p) {
-			productRepository.save(p);
-			return "Updated";
+	public @ResponseBody Product updateProduct (@RequestBody Product p) {
+		return productRepository.save(p);
 	}
 }

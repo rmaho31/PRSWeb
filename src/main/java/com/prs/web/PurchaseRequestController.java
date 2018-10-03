@@ -19,14 +19,13 @@ public class PurchaseRequestController {
 	private PurchaseRequestRepository purchaseRequestRepository;
 
 	@PostMapping(path="/Add") 
-	public @ResponseBody String addNewPurchaseRequest (@RequestBody PurchaseRequest pr) {
-				purchaseRequestRepository.save(pr);
-		return "Saved";
+	public @ResponseBody PurchaseRequest addNewPurchaseRequest (@RequestBody PurchaseRequest pr) {
+		return purchaseRequestRepository.save(pr);
 	}
 	
 	@GetMapping(path="/Get")
 	public @ResponseBody PurchaseRequest getPurchaseRequest(@RequestParam int id) {
-			return purchaseRequestRepository.findById(id).get();
+		return purchaseRequestRepository.findById(id).get();
 	}
 
 	@GetMapping(path="/List")
@@ -46,8 +45,7 @@ public class PurchaseRequestController {
 	}
 	
 	@PostMapping(path="/Change") 
-	public @ResponseBody String updatePurchaseRequest (@RequestBody PurchaseRequest pr) {
-			purchaseRequestRepository.save(pr);
-			return "Updated";
+	public @ResponseBody PurchaseRequest updatePurchaseRequest (@RequestBody PurchaseRequest pr) {
+		return purchaseRequestRepository.save(pr);
 	}
 }

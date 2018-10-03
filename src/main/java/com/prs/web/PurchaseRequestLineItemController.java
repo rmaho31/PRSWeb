@@ -19,14 +19,13 @@ public class PurchaseRequestLineItemController {
 	private PurchaseRequestLineItemRepository purchaseRequestLineItemRepository;
 
 	@PostMapping(path="/Add") 
-	public @ResponseBody String addNewPurchaseRequestLineItem (@RequestBody PurchaseRequestLineItem prli) {
-				purchaseRequestLineItemRepository.save(prli);
-		return "Saved";
+	public @ResponseBody PurchaseRequestLineItem addNewPurchaseRequestLineItem (@RequestBody PurchaseRequestLineItem prli) {
+		return purchaseRequestLineItemRepository.save(prli);
 	}
 	
 	@GetMapping(path="/Get")
 	public @ResponseBody PurchaseRequestLineItem getPurchaseRequestLineItem(@RequestParam int id) {
-			return purchaseRequestLineItemRepository.findById(id).get();
+		return purchaseRequestLineItemRepository.findById(id).get();
 	}
 
 	@GetMapping(path="/List")
@@ -46,8 +45,7 @@ public class PurchaseRequestLineItemController {
 	}
 	
 	@PostMapping(path="/Change") 
-	public @ResponseBody String updatePurchaseRequestLineItem (@RequestBody PurchaseRequestLineItem prli) {
-			purchaseRequestLineItemRepository.save(prli);
-			return "Updated";
+	public @ResponseBody PurchaseRequestLineItem updatePurchaseRequestLineItem (@RequestBody PurchaseRequestLineItem prli) {
+		return purchaseRequestLineItemRepository.save(prli);
 	}
 }

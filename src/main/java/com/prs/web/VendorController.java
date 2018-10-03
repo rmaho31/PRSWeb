@@ -19,14 +19,13 @@ public class VendorController {
 	private VendorRepository vendorRepository;
 
 	@PostMapping(path="/Add") 
-	public @ResponseBody String addNewVendor (@RequestBody Vendor v) {
-				vendorRepository.save(v);
-		return "Saved";
+	public @ResponseBody Vendor addNewVendor (@RequestBody Vendor v) {		
+		return vendorRepository.save(v);
 	}
 	
 	@GetMapping(path="/Get")
 	public @ResponseBody Vendor getVendor(@RequestParam int id) {
-			return vendorRepository.findById(id).get();
+		return vendorRepository.findById(id).get();
 	}
 
 	@GetMapping(path="/List")
@@ -46,8 +45,7 @@ public class VendorController {
 	}
 	
 	@PostMapping(path="/Change") 
-	public @ResponseBody String updateVendor (@RequestBody Vendor v) {
-			vendorRepository.save(v);
-			return "Updated";
+	public @ResponseBody Vendor updateVendor (@RequestBody Vendor v) {
+		return vendorRepository.save(v);
 	}
 }

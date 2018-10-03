@@ -2,7 +2,6 @@ package com.prs.business.purchaserequest;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -52,6 +51,20 @@ public class PurchaseRequest {
 		this.reasonForRejection = reasonForRejection;
 	}
 	
+	public PurchaseRequest(int id, User user, String description, String justification, String dateNeeded,
+			   String deliveryMode, String status, double total, String submittedDate, String reasonForRejection) {
+		this.id = id;
+		this.user = user;
+		this.description = description;
+		this.justification = justification;
+		this.dateNeeded = LocalDate.parse(dateNeeded);
+		this.deliveryMode = deliveryMode;
+		this.status = status;
+		this.total = total;
+		this.submittedDate = LocalDateTime.parse(submittedDate);
+		this.reasonForRejection = reasonForRejection;
+	}
+	
 	public PurchaseRequest(User user, String description, String justification, LocalDate dateNeeded,
 			   String deliveryMode, String status, double total, LocalDateTime submittedDate, String reasonForRejection) {
 		this.user = user;
@@ -65,7 +78,19 @@ public class PurchaseRequest {
 		this.reasonForRejection = reasonForRejection;
 	}
 	
-
+	public PurchaseRequest(User user, String description, String justification, String dateNeeded,
+			   String deliveryMode, String status, double total, String submittedDate, String reasonForRejection) {
+		this.user = user;
+		this.description = description;
+		this.justification = justification;
+		this.dateNeeded = LocalDate.parse(dateNeeded);
+		this.deliveryMode = deliveryMode;
+		this.status = status;
+		this.total = total;
+		this.submittedDate = LocalDateTime.parse(submittedDate);
+		this.reasonForRejection = reasonForRejection;
+	}
+	
 	public int getId() {
 		return id;
 	}

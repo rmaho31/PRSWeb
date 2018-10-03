@@ -50,8 +50,11 @@ public class User {
 		this.reviewer = reviewer;
 		this.admin = admin;
 	}
-	
-	
+
+	public User(String userName, String password) {
+		this.userName = userName;
+		this.password = password;
+	}
 
 	public int getId() {
 		return id;

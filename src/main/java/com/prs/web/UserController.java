@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.prs.business.user.User;
 import com.prs.business.user.UserRepository;
 
@@ -20,14 +19,13 @@ public class UserController {
 	private UserRepository userRepository;
 
 	@PostMapping(path="/Add") 
-	public @ResponseBody String addNewUser (@RequestBody User u) {
-				userRepository.save(u);
-		return "Saved";
+	public @ResponseBody User addNewUser (@RequestBody User u) {				
+		return userRepository.save(u);
 	}
 	
 	@GetMapping(path="/Get")
 	public @ResponseBody User getUser(@RequestParam int id) {
-			return userRepository.findById(id).get();
+		return userRepository.findById(id).get();
 	}
 
 	@GetMapping(path="/List")
@@ -47,9 +45,8 @@ public class UserController {
 	}
 	
 	@PostMapping(path="/Change") 
-	public @ResponseBody String updateUser(@RequestBody User u) {
-			userRepository.save(u);
-			return "Updated";
+	public @ResponseBody User updateUser(@RequestBody User u) {
+			return userRepository.save(u);
 	}
 	
 	@PostMapping(path="/Authenticate") 

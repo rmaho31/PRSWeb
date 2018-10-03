@@ -5,7 +5,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
 import com.prs.business.vendor.Vendor;
 
 @Entity
@@ -22,6 +21,9 @@ public class Product {
 	private String unit;
 	private String photoPath;
 	
+	public Product() {
+		
+	}
 
 	public Product(int id, Vendor vendor, String partNumber, String name, double price, String unit, String photoPath) {
 		this.id = id;
@@ -31,6 +33,14 @@ public class Product {
 		this.price = price;
 		this.unit = unit;
 		this.photoPath = photoPath;
+	}
+	
+	public Product(int id, Vendor vendor, String partNumber, String name, double price) {
+		this.id = id;
+		this.vendor = vendor;
+		this.partNumber = partNumber;
+		this.name = name;
+		this.price = price;
 	}
 	
 	public Product(Vendor vendor, String partNumber, String name, double price) {
@@ -110,6 +120,5 @@ public class Product {
 		return "Product [id=" + id + ", vendorID=" + vendor.getId() + ", partNumber=" + partNumber + ", name="
 				+ name + ", price=" + price + ", unit=" + unit + ", photoPath=" + photoPath + "]";
 	}
-	
 	
 }
