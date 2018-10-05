@@ -24,6 +24,7 @@ import com.prs.business.purchaserequest.PurchaseRequest;
 import com.prs.business.purchaserequest.PurchaseRequestLineItem;
 import com.prs.business.user.User;
 import com.prs.business.vendor.Vendor;
+import com.prs.utility.JsonResponse;
 import com.prs.utility.LocalDateJsonConverter;
 import com.prs.utility.LocalDateTimeJsonConverter;
 
@@ -47,7 +48,7 @@ public class PRSUserTests extends PrsWebApplicationTests{
     @Test
     public void testa1UserListRequest() throws Exception {
         assertNotNull(this.restTemplate.getForObject("http://localhost:" + port + "/Users/List",
-                	  Iterable.class));
+                	  JsonResponse.class));
     }
     
     @Test
@@ -60,16 +61,16 @@ public class PRSUserTests extends PrsWebApplicationTests{
         String json = gson.toJson(u1); // serializes target to Json
 
         HttpEntity<String> entity = new HttpEntity<String>(json, headers);
-    	User u2 = null;
+    	JsonResponse u2 = null;
     	u2 = this.restTemplate.postForObject("http://localhost:" + port + "/Users/Add", entity,
-             User.class);
+             JsonResponse.class);
         assertNotNull(u2);
-        uID = u2.getId();
+        uID = u2.getObjectID();
     }
     
     @Test
     public void testc3UserGetRequest() throws Exception {
-        assertNotNull(this.restTemplate.getForObject("http://localhost:" + port + "/Users/Get?id="+uID,
+        assertNotNull(this.restTemplate.getForObject("http://localhost:" + port + "/Users/"+uID,
                 	  User.class));
     }
     
