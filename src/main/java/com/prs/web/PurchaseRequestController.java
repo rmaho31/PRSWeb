@@ -1,5 +1,6 @@
 package com.prs.web;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -22,6 +23,8 @@ public class PurchaseRequestController {
 
 	@PostMapping(path = "/Add")
 	public @ResponseBody JsonResponse addNewPurchaseRequest(@RequestBody PurchaseRequest pr) {
+		pr.setSubmittedDate(LocalDateTime.now());
+		pr.setStatus(PurchaseRequest.STATUS_NEW);
 		return savePurchaseRequest(pr);
 	}
 
@@ -46,8 +49,40 @@ public class PurchaseRequestController {
 			return JsonResponse.getErrorInstance("PurchaseRequest list failure:" + e.getMessage(), e);
 		}
 	}
+	
+	@GetMapping(path = "/List/Review")
+	public @ResponseBody JsonResponse getAllPurchaseRequestsForReview(@RequestBody PurchaseRequest pr) {
+		try {
+			return JsonResponse.getInstance(purchaseRequestRepository.findAllByUserIdNotAndStatus(pr.getUser().getId(), PurchaseRequest.STATUS_REVIEW));
+		} catch (Exception e) {
+			return JsonResponse.getErrorInstance("PurchaseRequest review list failure:" + e.getMessage(), e);
+		}
+	}
+	
+	@GetMapping(path = "/List/SubmitForReview")
+	public @ResponseBody JsonResponse submitPurchaseRequestsForReview(@RequestBody PurchaseRequest pr) {
+		pr.setSubmittedDate(LocalDateTime.now());
+		if(pr.getTotal() < 51) {
+			pr.setStatus(PurchaseRequest.STATUS_APPROVE);
+		} else {
+			pr.setStatus(PurchaseRequest.STATUS_REVIEW);
+		}
+		return savePurchaseRequest(pr);
+	}
+	
+	@GetMapping(path = "/List/ApprovePR")
+	public @ResponseBody JsonResponse approvePurchaseRequest(@RequestBody PurchaseRequest pr) {
+		pr.setStatus(PurchaseRequest.STATUS_APPROVE);
+		return savePurchaseRequest(pr);
+	}
+	
+	@GetMapping(path = "/List/RejectPR")
+	public @ResponseBody JsonResponse rejectPurchaseRequest(@RequestBody PurchaseRequest pr) {
+		pr.setStatus(PurchaseRequest.STATUS_REJECTED);
+		return savePurchaseRequest(pr);
+	}
 
-	@GetMapping(path = "/Remove")
+	@PostMapping(path = "/Remove")
 	public @ResponseBody JsonResponse deletePurchaseRequest(@RequestBody PurchaseRequest pr) {
 		try {
 			purchaseRequestRepository.delete(pr);

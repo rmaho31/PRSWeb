@@ -1,5 +1,10 @@
 package com.prs;
 
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 import java.time.LocalDate;
@@ -47,8 +52,9 @@ public class PRSUserTests extends PrsWebApplicationTests{
 
     @Test
     public void testa1UserListRequest() throws Exception {
-        assertNotNull(this.restTemplate.getForObject("http://localhost:" + port + "/Users/List",
-                	  JsonResponse.class));
+    	JsonResponse j = this.restTemplate.getForObject("http://localhost:" + port + "/Users/List",
+                JsonResponse.class);
+    	assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);
     }
     
     @Test
@@ -61,17 +67,17 @@ public class PRSUserTests extends PrsWebApplicationTests{
         String json = gson.toJson(u1); // serializes target to Json
 
         HttpEntity<String> entity = new HttpEntity<String>(json, headers);
-    	JsonResponse u2 = null;
-    	u2 = this.restTemplate.postForObject("http://localhost:" + port + "/Users/Add", entity,
+        JsonResponse j = this.restTemplate.postForObject("http://localhost:" + port + "/Users/Add", entity,
              JsonResponse.class);
-        assertNotNull(u2);
-        uID = u2.getObjectID();
+        assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);     
+        uID =  ((LinkedHashMap<String, Integer>) j.getData()).get("id");
     }
     
     @Test
     public void testc3UserGetRequest() throws Exception {
-        assertNotNull(this.restTemplate.getForObject("http://localhost:" + port + "/Users/"+uID,
-                	  User.class));
+    	JsonResponse j = this.restTemplate.getForObject("http://localhost:" + port + "/Users/Get/"+uID,
+                JsonResponse.class);
+    	assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);
     }
     
     @Test
@@ -85,8 +91,9 @@ public class PRSUserTests extends PrsWebApplicationTests{
 
         HttpEntity<String> entity = new HttpEntity<String>(json, headers);
     	
-        assertNotNull(this.restTemplate.postForObject("http://localhost:" + port + "/Users/Change", entity,
-                	  User.class));
+        JsonResponse j = this.restTemplate.postForObject("http://localhost:" + port + "/Users/Change", entity,
+                JsonResponse.class);
+    	assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);
     }
     
     @Test
@@ -100,14 +107,16 @@ public class PRSUserTests extends PrsWebApplicationTests{
 
         HttpEntity<String> entity = new HttpEntity<String>(json, headers);
     	
-        assertNotNull(this.restTemplate.postForObject("http://localhost:" + port + "/Users/Authenticate", entity,
-                	  User.class));
+        JsonResponse j = this.restTemplate.postForObject("http://localhost:" + port + "/Users/Authenticate", entity,
+                JsonResponse.class);
+    	assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);
     }
     
     @Test
     public void testf6VendorListRequest() throws Exception {
-        assertNotNull(this.restTemplate.getForObject("http://localhost:" + port + "/Vendors/List",
-                	  Iterable.class));
+    	JsonResponse j = this.restTemplate.getForObject("http://localhost:" + port + "/Vendors/List",
+                JsonResponse.class);
+    	assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);
     }
     
     @Test
@@ -120,17 +129,17 @@ public class PRSUserTests extends PrsWebApplicationTests{
         String json = gson.toJson(v1); // serializes target to Json
 
         HttpEntity<String> entity = new HttpEntity<String>(json, headers);
-    	Vendor v2 = this.restTemplate.postForObject("http://localhost:" + port + "/Vendors/Add", entity,
-    				Vendor.class);
-        assertThat(v2.getCode()).contains("code");
-        vID = v2.getId();
+    	JsonResponse j = this.restTemplate.postForObject("http://localhost:" + port + "/Vendors/Add", entity,
+                JsonResponse.class);
+    	assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);
+        vID = ((LinkedHashMap<String, Integer>) j.getData()).get("id");
     }
     
     @Test
     public void testh8VendorGetRequest() throws Exception {
-    	Vendor v2 = this.restTemplate.getForObject("http://localhost:" + port + "/Vendors/Get?id="+vID,
-                	Vendor.class);
-    	assertThat(v2.getId()).isEqualTo(vID);
+    	JsonResponse j = this.restTemplate.getForObject("http://localhost:" + port + "/Vendors/Get/"+vID,
+                JsonResponse.class);
+    	assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);
     }
     
     @Test
@@ -143,68 +152,70 @@ public class PRSUserTests extends PrsWebApplicationTests{
         String json = gson.toJson(v1); // serializes target to Json
 
         HttpEntity<String> entity = new HttpEntity<String>(json, headers);
-    	
-        Vendor v2 = this.restTemplate.postForObject("http://localhost:" + port + "/Vendors/Change", entity,
-        			Vendor.class);
-        assertThat(v2.getCode()).contains("code");
+        JsonResponse j = this.restTemplate.postForObject("http://localhost:" + port + "/Vendors/Change", entity,
+                JsonResponse.class);
+    	assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);
     }
     
     @Test
     public void testj10ProductListRequest() throws Exception {
-        assertNotNull(this.restTemplate.getForObject("http://localhost:" + port + "/Products/List",
-                	  Iterable.class));
+    	JsonResponse j = this.restTemplate.getForObject("http://localhost:" + port + "/Products/List",
+                JsonResponse.class);
+    	assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);
     }
     
     @Test
     public void testk11ProductAddRequest() throws Exception {
     	// set headers
-    	Product p1 = new Product(this.restTemplate.getForObject("http://localhost:" + port + "/Vendors/Get?id="+vID,
-    							 Vendor.class), "partNumber", "name", 999.99);
+    	Vendor v1 = new Vendor(vID, "code", "name", "address", "city", "st", "zip", "phonenumber", "email", true);
+    	Product p1 = new Product(v1, "partNumber", "name", 999.99);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         Gson gson = new Gson(); 
         String json = gson.toJson(p1); // serializes target to Json
 
         HttpEntity<String> entity = new HttpEntity<String>(json, headers);
-    	Product p2 = this.restTemplate.postForObject("http://localhost:" + port + "/Products/Add", entity,
-          	  		 Product.class);
-        assertThat(p2.getPartNumber()).contains("partNumber");
-        pID = p2.getId();
+    	JsonResponse j = this.restTemplate.postForObject("http://localhost:" + port + "/Products/Add", entity,
+                JsonResponse.class);
+    	assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);
+        pID = ((LinkedHashMap<String, Integer>) j.getData()).get("id");
     }
     
     @Test
     public void testl12ProductGetRequest() throws Exception {
-        assertNotNull(this.restTemplate.getForObject("http://localhost:" + port + "/Products/Get?id="+pID,
-                	  Product.class));
+    	JsonResponse j = this.restTemplate.getForObject("http://localhost:" + port + "/Products/Get/"+pID,
+                JsonResponse.class);
+    	assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);
     }
     
     @Test
     public void testm13ProductUpdateRequest() throws Exception {
     	// set headers
-    	Product p1 = new Product(pID, this.restTemplate.getForObject("http://localhost:" + port + "/Vendors/Get?id="+vID,
-				 				 Vendor.class), "partNumber", "name", 999.99);
+    	Vendor v1 = new Vendor(vID, "code", "name", "address", "city", "st", "zip", "phonenumber", "email", true);
+    	Product p1 = new Product(pID, v1, "partNumber", "name", 999.99);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         Gson gson = new Gson(); 
         String json = gson.toJson(p1); // serializes target to Json
 
         HttpEntity<String> entity = new HttpEntity<String>(json, headers);
-    	Product p2 = this.restTemplate.postForObject("http://localhost:" + port + "/Products/Change", entity,
-                     Product.class);
-        assertThat(p2.getId()).isEqualTo(pID);
+    	JsonResponse j = this.restTemplate.postForObject("http://localhost:" + port + "/Products/Change", entity,
+                JsonResponse.class);
+    	assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);
     }
     
     @Test
     public void testn14PurchaseRequestListRequest() throws Exception {
-        assertNotNull(this.restTemplate.getForObject("http://localhost:" + port + "/PurchaseRequests/List",
-        			  Iterable.class));
+    	JsonResponse j = this.restTemplate.getForObject("http://localhost:" + port + "/PurchaseRequests/List",
+                JsonResponse.class);
+    	assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);
     }
     
     @Test
     public void testo15PurchaseRequestAddRequest() throws Exception {
     	// set headers
-    	PurchaseRequest pr1 = new PurchaseRequest(this.restTemplate.getForObject("http://localhost:" + port + "/Users/Get?id="+uID,
-    							 				  User.class), "description", "justification", "2018-10-04", "deliveryMode", "status",
+    	User u1 = new User(uID, "username", "pwd", "fnam", "lname", "phone", "email", true, true);
+    	PurchaseRequest pr1 = new PurchaseRequest(u1, "description", "justification", "2018-10-04", "deliveryMode", "status",
     											  999.99, "2018-10-04T17:55:29", "rfr");
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -217,23 +228,24 @@ public class PRSUserTests extends PrsWebApplicationTests{
 						.create();
         String json = gson.toJson(pr1); // serializes target to Json
         HttpEntity<String> entity = new HttpEntity<String>(json, headers);
-    	PurchaseRequest pr2 = this.restTemplate.postForObject("http://localhost:" + port + "/PurchaseRequests/Add", entity,
-          	  				  PurchaseRequest.class);
-        assertThat(pr2.getDescription()).contains("description");
-        prID = pr2.getId();
+    	JsonResponse j = this.restTemplate.postForObject("http://localhost:" + port + "/PurchaseRequests/Add", entity,
+                JsonResponse.class);
+    	assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);
+        prID = ((LinkedHashMap<String, Integer>) j.getData()).get("id");
     }
     
     @Test
     public void testp16PurchaseRequestGetRequest() throws Exception {
-        assertNotNull(this.restTemplate.getForObject("http://localhost:" + port + "/PurchaseRequests/Get?id="+prID,
-                	  PurchaseRequest.class));
+    	JsonResponse j = this.restTemplate.getForObject("http://localhost:" + port + "/PurchaseRequests/Get/"+prID,
+                JsonResponse.class);
+    	assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);
     }
     
     @Test
     public void testq17PurchaseRequestUpdateRequest() throws Exception {
     	// set headers
-    	PurchaseRequest pr1 = new PurchaseRequest(prID, this.restTemplate.getForObject("http://localhost:" + port + "/Users/Get?id="+uID,
-				  								  User.class), "description", "justification", "2018-10-04", "deliveryMode", "status",
+    	User u1 = new User(uID, "username", "pwd", "fnam", "lname", "phone", "email", true, true);
+    	PurchaseRequest pr1 = new PurchaseRequest(prID, u1, "description", "justification", "2018-10-04", "deliveryMode", "status",
 				  								  999.99, "2018-10-04T17:55:29", "rfr");
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -247,24 +259,28 @@ public class PRSUserTests extends PrsWebApplicationTests{
         String json = gson.toJson(pr1); // serializes target to Json
 
         HttpEntity<String> entity = new HttpEntity<String>(json, headers);
-    	PurchaseRequest pr2 = this.restTemplate.postForObject("http://localhost:" + port + "/PurchaseRequests/Change", entity,
-                			  PurchaseRequest.class);
-        assertThat(pr2.getId()).isEqualTo(prID);
+    	JsonResponse j = this.restTemplate.postForObject("http://localhost:" + port + "/PurchaseRequests/Change", entity,
+                JsonResponse.class);
+    	assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);
     }
     
     @Test
     public void testr18PRLIListRequest() throws Exception {
-        assertNotNull(this.restTemplate.getForObject("http://localhost:" + port + "/PurchaseRequestLineItems/List",
-        			  Iterable.class));
+    	JsonResponse j = this.restTemplate.getForObject("http://localhost:" + port + "/PurchaseRequestLineItems/List",
+                JsonResponse.class);
+    	assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);
     }
     
     @Test
     public void tests19PRLIAddRequest() throws Exception {
     	// set headers
+    	User u1 = new User(uID, "username", "pwd", "fnam", "lname", "phone", "email", true, true);
+    	PurchaseRequest pr1 = new PurchaseRequest(prID, u1, "description", "justification", "2018-10-04", "deliveryMode", "status",
+				  								  999.99, "2018-10-04T17:55:29", "rfr");
+    	Vendor v1 = new Vendor(vID, "code", "name", "address", "city", "st", "zip", "phonenumber", "email", true);
+    	Product p1 = new Product(pID, v1, "partNumber", "name", 999.99);
     	PurchaseRequestLineItem prli1 = 
-    			new PurchaseRequestLineItem(this.restTemplate.getForObject("http://localhost:" + port + "/PurchaseRequests/Get?id="+prID,
-    							 			PurchaseRequest.class), this.restTemplate.getForObject("http://localhost:" + port + "/Products/Get?id="+pID,
-    	    							 	Product.class), 5);
+    			new PurchaseRequestLineItem(pr1, p1, 5);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         //have to use this to parse the localdate and localdatetime
@@ -277,25 +293,29 @@ public class PRSUserTests extends PrsWebApplicationTests{
         String json = gson.toJson(prli1); // serializes target to Json
 
         HttpEntity<String> entity = new HttpEntity<String>(json, headers);
-    	PurchaseRequestLineItem prli2 = this.restTemplate.postForObject("http://localhost:" + port + "/PurchaseRequestLineItems/Add", entity,
-    									PurchaseRequestLineItem.class);
-        assertThat(prli2.getQuantity()).isEqualTo(5);
-        prliID = prli2.getId();
+    	JsonResponse j = this.restTemplate.postForObject("http://localhost:" + port + "/PurchaseRequestLineItems/Add", entity,
+                JsonResponse.class);
+    	assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);
+        prliID = ((LinkedHashMap<String, Integer>) j.getData()).get("id");
     }
     
     @Test
     public void testt20PRLIGetRequest() throws Exception {
-        assertNotNull(this.restTemplate.getForObject("http://localhost:" + port + "/PurchaseRequestLineItems/Get?id="+prliID,
-                	  PurchaseRequestLineItem.class));
+    	JsonResponse j = this.restTemplate.getForObject("http://localhost:" + port + "/PurchaseRequestLineItems/Get/"+prliID,
+                JsonResponse.class);
+    	assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);
     }
     
     @Test
     public void testu21PRLIUpdateRequest() throws Exception {
     	// set headers
+    	User u1 = new User(uID, "username", "pwd", "fnam", "lname", "phone", "email", true, true);
+    	PurchaseRequest pr1 = new PurchaseRequest(prID, u1, "description", "justification", "2018-10-04", "deliveryMode", "status",
+				  								  999.99, "2018-10-04T17:55:29", "rfr");
+    	Vendor v1 = new Vendor(vID, "code", "name", "address", "city", "st", "zip", "phonenumber", "email", true);
+    	Product p1 = new Product(pID, v1, "partNumber", "name", 999.99);
     	PurchaseRequestLineItem prli1 = 
-    			new PurchaseRequestLineItem(prliID, this.restTemplate.getForObject("http://localhost:" + port + "/PurchaseRequests/Get?id="+prID,
-    							 			PurchaseRequest.class), this.restTemplate.getForObject("http://localhost:" + port + "/Products/Get?id="+pID,
-    	    							 	Product.class), 5);
+    			new PurchaseRequestLineItem(prliID, pr1, p1, 5);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
      	//have to use this to parse the localdate and localdatetime
@@ -308,43 +328,110 @@ public class PRSUserTests extends PrsWebApplicationTests{
         String json = gson.toJson(prli1); // serializes target to Json
 
         HttpEntity<String> entity = new HttpEntity<String>(json, headers);
-    	PurchaseRequestLineItem prli2 = this.restTemplate.postForObject("http://localhost:" + port + "/PurchaseRequestLineItems/Change", entity,
-                						PurchaseRequestLineItem.class);
-        assertThat(prli2.getId()).isEqualTo(prliID);
+    	JsonResponse j = this.restTemplate.postForObject("http://localhost:" + port + "/PurchaseRequestLineItems/Change", entity,
+                JsonResponse.class);
+    	assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);
     }
     
     @Test
     public void testv22PRLIRemoveRequest() throws Exception {
     	System.out.println(prliID);
-        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/PurchaseRequestLineItems/Remove?id="+prliID,
-                   String.class)).contains("Deleted");
+    	// set headers
+    	User u1 = new User(uID, "username", "pwd", "fnam", "lname", "phone", "email", true, true);
+    	PurchaseRequest pr1 = new PurchaseRequest(prID, u1, "description", "justification", "2018-10-04", "deliveryMode", "status",
+				  								  999.99, "2018-10-04T17:55:29", "rfr");
+    	Vendor v1 = new Vendor(vID, "code", "name", "address", "city", "st", "zip", "phonenumber", "email", true);
+    	Product p1 = new Product(pID, v1, "partNumber", "name", 999.99);
+    	PurchaseRequestLineItem prli1 = 
+    			new PurchaseRequestLineItem(prliID, pr1, p1, 5);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+     	//have to use this to parse the localdate and localdatetime
+        Gson gson = new GsonBuilder()
+						.setPrettyPrinting()
+						.serializeNulls()
+						.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeJsonConverter())
+						.registerTypeAdapter(LocalDate.class, new LocalDateJsonConverter())
+						.create(); 
+        String json = gson.toJson(prli1); // serializes target to Json
+
+        HttpEntity<String> entity = new HttpEntity<String>(json, headers);
+    	JsonResponse j = this.restTemplate.postForObject("http://localhost:" + port + "/PurchaseRequestLineItems/Remove", entity,
+                JsonResponse.class);
+    	assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);
     }
     
     @Test
     public void testw23PurchaseRequestRemoveRequest() throws Exception {
     	System.out.println(prID);
-        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/PurchaseRequests/Remove?id="+prID,
-                String.class)).contains("Deleted");
+    	// set headers
+    	User u1 = new User(uID, "username", "pwd", "fnam", "lname", "phone", "email", true, true);
+    	PurchaseRequest pr1 = new PurchaseRequest(prID, u1, "description", "justification", "2018-10-04", "deliveryMode", "status",
+				  								  999.99, "2018-10-04T17:55:29", "rfr");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        //have to use this to parse the localdate and localdatetime
+        Gson gson = new GsonBuilder()
+						.setPrettyPrinting()
+						.serializeNulls()
+						.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeJsonConverter())
+						.registerTypeAdapter(LocalDate.class, new LocalDateJsonConverter())
+						.create();
+        String json = gson.toJson(pr1); // serializes target to Json
+
+        HttpEntity<String> entity = new HttpEntity<String>(json, headers);
+    	JsonResponse j = this.restTemplate.postForObject("http://localhost:" + port + "/PurchaseRequests/Remove", entity,
+                JsonResponse.class);
+    	assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);
     }
     
     @Test
     public void testx24ProductRemoveRequest() throws Exception {
     	System.out.println(pID);
-        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/Products/Remove?id="+pID,
-        		   String.class)).contains("Deleted");
+    	// set headers
+    	Vendor v1 = new Vendor(vID, "code", "name", "address", "city", "st", "zip", "phonenumber", "email", true);
+    	Product p1 = new Product(pID, v1, "partNumber", "name", 999.99);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        Gson gson = new Gson(); 
+        String json = gson.toJson(p1); // serializes target to Json
+
+        HttpEntity<String> entity = new HttpEntity<String>(json, headers);
+    	JsonResponse j = this.restTemplate.postForObject("http://localhost:" + port + "/Products/Remove", entity,
+                JsonResponse.class);
+    	assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);
     }
     
     @Test
     public void testy25VendorRemoveRequest() throws Exception {
     	System.out.println(vID);
-        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/Vendors/Remove?id="+vID,
-                   String.class)).contains("Deleted");
+    	// set headers
+    	Vendor v1 = new Vendor(vID, "code", "name", "address", "city", "st", "zip", "phonenumber", "email", true);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        Gson gson = new Gson(); 
+        String json = gson.toJson(v1); // serializes target to Json
+
+        HttpEntity<String> entity = new HttpEntity<String>(json, headers);
+        JsonResponse j = this.restTemplate.postForObject("http://localhost:" + port + "/Vendors/Remove", entity,
+                JsonResponse.class);
+    	assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);
     }
     
     @Test
     public void testz26UserRemoveRequest() throws Exception {
     	System.out.println(uID);
-        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/Users/Remove?id="+uID,
-                   String.class)).contains("Deleted");
+    	// set headers
+    	User u1 = new User(uID, "username", "pwd", "fnam", "lname", "phone", "email", true, true);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        Gson gson = new Gson(); 
+        String json = gson.toJson(u1); // serializes target to Json
+
+        HttpEntity<String> entity = new HttpEntity<String>(json, headers);
+    	
+        JsonResponse j = this.restTemplate.postForObject("http://localhost:" + port + "/Users/Remove", entity,
+                JsonResponse.class);
+    	assertThat(j.getMessage()).contains(JsonResponse.SUCCESS);
     }
 }

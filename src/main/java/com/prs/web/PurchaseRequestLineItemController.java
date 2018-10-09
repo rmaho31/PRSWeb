@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import com.prs.business.purchaserequest.PurchaseRequest;
 import com.prs.business.purchaserequest.PurchaseRequestLineItem;
 import com.prs.business.purchaserequest.PurchaseRequestLineItemRepository;
+import com.prs.business.purchaserequest.PurchaseRequestRepository;
 import com.prs.utility.JsonResponse;
 
 @Controller
@@ -19,10 +21,22 @@ import com.prs.utility.JsonResponse;
 public class PurchaseRequestLineItemController {
 	@Autowired
 	private PurchaseRequestLineItemRepository purchaseRequestLineItemRepository;
+	@Autowired
+	private PurchaseRequestRepository purchaseRequestRepository;
 
 	@PostMapping(path = "/Add")
 	public @ResponseBody JsonResponse addNewPurchaseRequestLineItem(@RequestBody PurchaseRequestLineItem prli) {
-		return savePurchaseRequestLineItem(prli);
+		JsonResponse jsr = savePurchaseRequestLineItem(prli);
+		if (jsr.getMessage().equals(JsonResponse.SUCCESS)) {
+			try {
+				updatePurchaseRequestTotal(prli);
+				return jsr;
+			} catch (Exception ex) {
+				return JsonResponse.getErrorInstance(ex.getMessage(), ex);
+			}
+		} else {
+			return jsr;
+		}
 	}
 
 	@GetMapping(path = "/Get/{id}")
@@ -47,10 +61,11 @@ public class PurchaseRequestLineItemController {
 		}
 	}
 
-	@GetMapping(path = "/Remove")
+	@PostMapping(path = "/Remove")
 	public @ResponseBody JsonResponse deletePurchaseRequestLineItem(@RequestBody PurchaseRequestLineItem prli) {
 		try {
 			purchaseRequestLineItemRepository.delete(prli);
+			updatePurchaseRequestTotal(prli);
 			return JsonResponse.getInstance(prli);
 		} catch (Exception ex) {
 			return JsonResponse.getErrorInstance(ex.getMessage(), ex);
@@ -59,7 +74,17 @@ public class PurchaseRequestLineItemController {
 
 	@PostMapping(path = "/Change")
 	public @ResponseBody JsonResponse updatePurchaseRequestLineItem(@RequestBody PurchaseRequestLineItem prli) {
-		return savePurchaseRequestLineItem(prli);
+		JsonResponse jsr = savePurchaseRequestLineItem(prli);
+		if (jsr.getMessage().equals(JsonResponse.SUCCESS)) {
+			try {
+				updatePurchaseRequestTotal(prli);
+				return jsr;
+			} catch (Exception ex) {
+				return JsonResponse.getErrorInstance(ex.getMessage(), ex);
+			}
+		} else {
+			return jsr;
+		}
 	}
 
 	private @ResponseBody JsonResponse savePurchaseRequestLineItem(@RequestBody PurchaseRequestLineItem prli) {
@@ -71,5 +96,15 @@ public class PurchaseRequestLineItemController {
 		} catch (Exception ex) {
 			return JsonResponse.getErrorInstance(ex.getMessage(), ex);
 		}
+	}
+
+	private void updatePurchaseRequestTotal(PurchaseRequestLineItem prli) throws Exception{
+		PurchaseRequest pr = purchaseRequestRepository.findById(prli.getPurchaseRequest().getId()).get();
+		double total = 0;
+		for (PurchaseRequestLineItem i : purchaseRequestLineItemRepository.findAllByPurchaseRequestId(pr.getId())) {
+			total += i.getQuantity() * i.getProduct().getPrice();
+		}
+		pr.setTotal(total);
+		purchaseRequestRepository.save(pr);
 	}
 }

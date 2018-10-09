@@ -50,7 +50,7 @@ public class PurchaseRequestLineItem {
 		return purchaseRequest;
 	}
 
-	public void setPurchaseRequestID(PurchaseRequest purchaseRequest) {
+	public void setPurchaseRequest(PurchaseRequest purchaseRequest) {
 		this.purchaseRequest = purchaseRequest;
 	}
 

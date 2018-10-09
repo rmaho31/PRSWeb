@@ -47,7 +47,7 @@ public class VendorController {
 		}
 	}
 
-	@GetMapping(path = "/Remove")
+	@PostMapping(path = "/Remove")
 	public @ResponseBody JsonResponse deleteVendor(@RequestBody Vendor v) {
 		try {
 			vendorRepository.delete(v);

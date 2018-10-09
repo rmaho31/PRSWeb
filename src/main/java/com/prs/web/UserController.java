@@ -47,7 +47,7 @@ public class UserController {
 		}
 	}
 
-	@GetMapping(path = "/Remove")
+	@PostMapping(path = "/Remove")
 	public @ResponseBody JsonResponse deleteUser(@RequestBody User u) {
 		try {
 			userRepository.delete(u);

@@ -46,7 +46,7 @@ public class ProductController {
 		}
 	}
 
-	@GetMapping(path = "/Remove")
+	@PostMapping(path = "/Remove")
 	public @ResponseBody JsonResponse deleteProduct(@RequestBody Product product) {
 		try {
 			productRepository.delete(product);
