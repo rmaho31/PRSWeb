@@ -74,19 +74,4 @@ public class JsonResponse {
 		return new JsonResponse(-1, m, null, e);
 	}
 	
-	public int getObjectID() {
-		if(data.getClass() == User.class) {
-			return ((User) data).getId();
-		} else if (data.getClass() == Vendor.class) {
-			return ((Vendor) data).getId();
-		} else if (data.getClass() == Product.class) {
-			return ((Product) data).getId();
-		} else if (data.getClass() == PurchaseRequest.class) {
-			return ((PurchaseRequest) data).getId();
-		} else if (data.getClass() == PurchaseRequestLineItem.class) {
-			return ((PurchaseRequestLineItem) data).getId();
-		} 
-		return 0;
-	}
-	
 }
