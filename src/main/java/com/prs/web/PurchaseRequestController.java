@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.prs.business.purchaserequest.PurchaseRequest;
 import com.prs.business.purchaserequest.PurchaseRequestRepository;
+import com.prs.business.user.User;
 import com.prs.utility.JsonResponse;
 
+@CrossOrigin
 @Controller
 @RequestMapping(path = "/PurchaseRequests")
 public class PurchaseRequestController {
@@ -49,33 +52,34 @@ public class PurchaseRequestController {
 			return JsonResponse.getErrorInstance("PurchaseRequest list failure:" + e.getMessage(), e);
 		}
 	}
-	
-	@GetMapping(path = "/List/Review")
-	public @ResponseBody JsonResponse getAllPurchaseRequestsForReview(@RequestBody PurchaseRequest pr) {
+
+	@PostMapping(path = "/List/Review")
+	public @ResponseBody JsonResponse getAllPurchaseRequestsForReview(@RequestBody User u) {
 		try {
-			return JsonResponse.getInstance(purchaseRequestRepository.findAllByUserIdNotAndStatus(pr.getUser().getId(), PurchaseRequest.STATUS_REVIEW));
+			return JsonResponse.getInstance(purchaseRequestRepository.findByUserIdNotAndStatus(u.getId(),
+					PurchaseRequest.STATUS_REVIEW));
 		} catch (Exception e) {
 			return JsonResponse.getErrorInstance("PurchaseRequest review list failure:" + e.getMessage(), e);
 		}
 	}
-	
-	@GetMapping(path = "/List/SubmitForReview")
+
+	@GetMapping(path = "/SubmitForReview")
 	public @ResponseBody JsonResponse submitPurchaseRequestsForReview(@RequestBody PurchaseRequest pr) {
 		pr.setSubmittedDate(LocalDateTime.now());
-		if(pr.getTotal() < 51) {
+		if (pr.getTotal() < 51) {
 			pr.setStatus(PurchaseRequest.STATUS_APPROVE);
 		} else {
 			pr.setStatus(PurchaseRequest.STATUS_REVIEW);
 		}
 		return savePurchaseRequest(pr);
 	}
-	
+
 	@GetMapping(path = "/List/ApprovePR")
 	public @ResponseBody JsonResponse approvePurchaseRequest(@RequestBody PurchaseRequest pr) {
 		pr.setStatus(PurchaseRequest.STATUS_APPROVE);
 		return savePurchaseRequest(pr);
 	}
-	
+
 	@GetMapping(path = "/List/RejectPR")
 	public @ResponseBody JsonResponse rejectPurchaseRequest(@RequestBody PurchaseRequest pr) {
 		pr.setStatus(PurchaseRequest.STATUS_REJECTED);

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import com.prs.business.purchaserequest.PurchaseRequestLineItemRepository;
 import com.prs.business.purchaserequest.PurchaseRequestRepository;
 import com.prs.utility.JsonResponse;
 
+@CrossOrigin
 @Controller
 @RequestMapping(path = "/PurchaseRequestLineItems")
 public class PurchaseRequestLineItemController {
@@ -98,7 +100,7 @@ public class PurchaseRequestLineItemController {
 		}
 	}
 
-	private void updatePurchaseRequestTotal(PurchaseRequestLineItem prli) throws Exception{
+	private void updatePurchaseRequestTotal(PurchaseRequestLineItem prli) throws Exception {
 		PurchaseRequest pr = purchaseRequestRepository.findById(prli.getPurchaseRequest().getId()).get();
 		double total = 0;
 		for (PurchaseRequestLineItem i : purchaseRequestLineItemRepository.findAllByPurchaseRequestId(pr.getId())) {

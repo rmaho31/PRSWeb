@@ -16,7 +16,7 @@ public class PurchaseRequest {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@ManyToOne
-	@JoinColumn(name="UserID")
+	@JoinColumn(name = "UserID")
 	private User user;
 	private String description;
 	private String justification;
@@ -31,14 +31,13 @@ public class PurchaseRequest {
 	public static final String STATUS_EDIT = "Edit";
 	public static final String STATUS_APPROVE = "Approve";
 	public static final String STATUS_REJECTED = "Rejected";
-	
-	
+
 	public PurchaseRequest() {
-		
+
 	}
 
 	public PurchaseRequest(int id, User user, String description, String justification, LocalDate dateNeeded,
-						   String deliveryMode, String status, double total, LocalDateTime submittedDate, String reasonForRejection) {
+			String deliveryMode, String status, double total, LocalDateTime submittedDate, String reasonForRejection) {
 		this.id = id;
 		this.user = user;
 		this.description = description;
@@ -50,9 +49,9 @@ public class PurchaseRequest {
 		this.submittedDate = submittedDate;
 		this.reasonForRejection = reasonForRejection;
 	}
-	
+
 	public PurchaseRequest(int id, User user, String description, String justification, String dateNeeded,
-			   String deliveryMode, String status, double total, String submittedDate, String reasonForRejection) {
+			String deliveryMode, String status, double total, String submittedDate, String reasonForRejection) {
 		this.id = id;
 		this.user = user;
 		this.description = description;
@@ -64,9 +63,9 @@ public class PurchaseRequest {
 		this.submittedDate = LocalDateTime.parse(submittedDate);
 		this.reasonForRejection = reasonForRejection;
 	}
-	
+
 	public PurchaseRequest(User user, String description, String justification, LocalDate dateNeeded,
-			   String deliveryMode, String status, double total, LocalDateTime submittedDate, String reasonForRejection) {
+			String deliveryMode, String status, double total, LocalDateTime submittedDate, String reasonForRejection) {
 		this.user = user;
 		this.description = description;
 		this.justification = justification;
@@ -77,9 +76,9 @@ public class PurchaseRequest {
 		this.submittedDate = submittedDate;
 		this.reasonForRejection = reasonForRejection;
 	}
-	
-	public PurchaseRequest(User user, String description, String justification, String dateNeeded,
-			   String deliveryMode, String status, double total, String submittedDate, String reasonForRejection) {
+
+	public PurchaseRequest(User user, String description, String justification, String dateNeeded, String deliveryMode,
+			String status, double total, String submittedDate, String reasonForRejection) {
 		this.user = user;
 		this.description = description;
 		this.justification = justification;
@@ -90,7 +89,7 @@ public class PurchaseRequest {
 		this.submittedDate = LocalDateTime.parse(submittedDate);
 		this.reasonForRejection = reasonForRejection;
 	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -170,12 +169,11 @@ public class PurchaseRequest {
 	public void setReasonForRejection(String reasonForRejection) {
 		this.reasonForRejection = reasonForRejection;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "PurchaseRequest [id=" + id + ", user=" + user.getId() + ", description=" + description + ", justification="
-				+ justification + ", dateNeeded=" + dateNeeded + ", deliveryMode=" + deliveryMode + ", status="
-				+ status + ", total=" + total + ", submittedDate=" + submittedDate
-				+ "]";
+		return "PurchaseRequest [id=" + id + ", user=" + user.getId() + ", description=" + description
+				+ ", justification=" + justification + ", dateNeeded=" + dateNeeded + ", deliveryMode=" + deliveryMode
+				+ ", status=" + status + ", total=" + total + ", submittedDate=" + submittedDate + "]";
 	}
 }

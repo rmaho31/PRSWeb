@@ -1,4 +1,5 @@
 package com.prs.business.product;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,16 +14,16 @@ public class Product {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@ManyToOne
-	@JoinColumn(name="vendorID")
+	@JoinColumn(name = "vendorID")
 	private Vendor vendor;
 	private String partNumber;
 	private String name;
 	private double price;
 	private String unit;
 	private String photoPath;
-	
+
 	public Product() {
-		
+
 	}
 
 	public Product(int id, Vendor vendor, String partNumber, String name, double price, String unit, String photoPath) {
@@ -34,7 +35,7 @@ public class Product {
 		this.unit = unit;
 		this.photoPath = photoPath;
 	}
-	
+
 	public Product(int id, Vendor vendor, String partNumber, String name, double price) {
 		this.id = id;
 		this.vendor = vendor;
@@ -42,14 +43,14 @@ public class Product {
 		this.name = name;
 		this.price = price;
 	}
-	
+
 	public Product(Vendor vendor, String partNumber, String name, double price) {
 		this.vendor = vendor;
 		this.partNumber = partNumber;
 		this.name = name;
 		this.price = price;
 	}
-	
+
 	public Product(Vendor vendor, String partNumber, String name, double price, String unit, String photoPath) {
 		this.vendor = vendor;
 		this.partNumber = partNumber;
@@ -114,11 +115,11 @@ public class Product {
 	public void setPhotoPath(String photoPath) {
 		this.photoPath = photoPath;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", vendorID=" + vendor.getId() + ", partNumber=" + partNumber + ", name="
-				+ name + ", price=" + price + ", unit=" + unit + ", photoPath=" + photoPath + "]";
+		return "Product [id=" + id + ", vendorID=" + vendor.getId() + ", partNumber=" + partNumber + ", name=" + name
+				+ ", price=" + price + ", unit=" + unit + ", photoPath=" + photoPath + "]";
 	}
-	
+
 }

@@ -19,11 +19,11 @@ public class Vendor {
 	private String zip;
 	private String phoneNumber;
 	private String email;
-	@Column(name="IsPreApproved")
+	@Column(name = "IsPreApproved")
 	private boolean preApproved;
-	
+
 	public Vendor() {
-		
+
 	}
 
 	public Vendor(int id, String code, String name, String address, String city, String state, String zip,
@@ -39,9 +39,9 @@ public class Vendor {
 		this.email = email;
 		this.preApproved = isPreApproved;
 	}
-	
-	public Vendor(String code, String name, String address, String city, String state, String zip,
-			String phoneNumber, String email, boolean isPreApproved) {
+
+	public Vendor(String code, String name, String address, String city, String state, String zip, String phoneNumber,
+			String email, boolean isPreApproved) {
 		this.code = code;
 		this.name = name;
 		this.address = address;
@@ -132,11 +132,11 @@ public class Vendor {
 	public void setPreApproved(boolean preApproved) {
 		this.preApproved = preApproved;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Vendor [id=" + id + ", code=" + code + ", name=" + name + ", address=" + address + ", city=" + city
-				+ ", state=" + state + ", zip=" + zip + ", phoneNumber=" + phoneNumber + ", email=" + email + ", preApproved="
-				+ preApproved + "]";
+				+ ", state=" + state + ", zip=" + zip + ", phoneNumber=" + phoneNumber + ", email=" + email
+				+ ", preApproved=" + preApproved + "]";
 	}
 }

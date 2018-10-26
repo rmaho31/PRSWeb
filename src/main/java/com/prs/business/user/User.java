@@ -21,9 +21,9 @@ public class User {
 	private boolean reviewer;
 	@Column(name = "IsAdmin")
 	private boolean admin;
-	
+
 	public User() {
-		
+
 	}
 
 	public User(int id, String userName, String password, String firstName, String lastName, String phoneNumber,
@@ -38,9 +38,9 @@ public class User {
 		this.reviewer = Reviewer;
 		this.admin = Admin;
 	}
-	
-	public User(String userName, String password, String firstName, String lastName, String phoneNumber,
-			String email, boolean reviewer, boolean admin) {
+
+	public User(String userName, String password, String firstName, String lastName, String phoneNumber, String email,
+			boolean reviewer, boolean admin) {
 		this.userName = userName;
 		this.password = password;
 		this.firstName = firstName;
@@ -127,11 +127,11 @@ public class User {
 	public void setAdmin(boolean admin) {
 		this.admin = admin;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", userName=" + userName + ", password=" + password + ", firstName=" + firstName
 				+ ", lastName=" + lastName + ", phoneNumber=" + phoneNumber + ", email=" + email + ", reviewer="
-				+ reviewer + ", admin=" + admin +"]";
+				+ reviewer + ", admin=" + admin + "]";
 	}
 }

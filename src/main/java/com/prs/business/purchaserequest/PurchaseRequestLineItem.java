@@ -14,24 +14,24 @@ public class PurchaseRequestLineItem {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@ManyToOne
-	@JoinColumn(name="PurchaseRequestID")
+	@JoinColumn(name = "PurchaseRequestID")
 	private PurchaseRequest purchaseRequest;
 	@ManyToOne
-	@JoinColumn(name="ProductID")
+	@JoinColumn(name = "ProductID")
 	private Product product;
 	private int quantity;
-	
+
 	public PurchaseRequestLineItem() {
-		
+
 	}
-	
+
 	public PurchaseRequestLineItem(int id, PurchaseRequest purchaseRequest, Product product, int quantity) {
 		this.id = id;
 		this.purchaseRequest = purchaseRequest;
 		this.product = product;
 		this.quantity = quantity;
 	}
-	
+
 	public PurchaseRequestLineItem(PurchaseRequest purchaseRequest, Product product, int quantity) {
 		this.purchaseRequest = purchaseRequest;
 		this.product = product;
@@ -69,7 +69,7 @@ public class PurchaseRequestLineItem {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "purchaseRequestLineItem [id=" + id + ", purchaseRequest=" + purchaseRequest.getId() + ", product="
