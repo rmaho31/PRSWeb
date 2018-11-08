@@ -1,6 +1,9 @@
 package com.prs.web;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
@@ -41,8 +44,8 @@ public class PurchaseRequestLineItemController {
 		}
 	}
 
-	@GetMapping(path = "/Get/{id}")
-	public @ResponseBody JsonResponse getPurchaseRequestLineItem(@PathVariable int id) {
+	@GetMapping(path = "/Get/LineItem/{id}")
+	public @ResponseBody JsonResponse getLineItem(@PathVariable int id) {
 		try {
 			Optional<PurchaseRequestLineItem> purchasRequest = purchaseRequestLineItemRepository.findById(id);
 			if (purchasRequest.isPresent())
@@ -54,10 +57,32 @@ public class PurchaseRequestLineItemController {
 		}
 	}
 
+	@GetMapping(path = "/Get/Prli/{id}")
+	public @ResponseBody JsonResponse getPurchaseRequestLineItems(@PathVariable int id) {
+		try {
+			return JsonResponse.getInstance(purchaseRequestLineItemRepository.findAllByPurchaseRequestId(id));
+		} catch (Exception e) {
+			return JsonResponse.getErrorInstance("Error getting purchasRequest line items:  " + e.getMessage(), e);
+		}
+	}
+
 	@GetMapping(path = "/List")
 	public @ResponseBody JsonResponse getAllPurchaseRequestLineItems() {
 		try {
 			return JsonResponse.getInstance(purchaseRequestLineItemRepository.findAll());
+		} catch (Exception e) {
+			return JsonResponse.getErrorInstance("PurchaseRequestLineItem list failure:" + e.getMessage(), e);
+		}
+	}
+
+	@GetMapping(path = "/List/Vendors/{id}")
+	public @ResponseBody JsonResponse getAllPurchaseRequestLineItemsByVendor(@PathVariable int id) {
+		try {
+
+			return JsonResponse.getInstance(purchaseRequestLineItemRepository.findAll().stream()
+					.filter(x -> x.getProduct().getVendor().getId() == id
+							&& x.getPurchaseRequest().getStatus().equals(PurchaseRequest.STATUS_APPROVE))
+					.collect(Collectors.toList()));
 		} catch (Exception e) {
 			return JsonResponse.getErrorInstance("PurchaseRequestLineItem list failure:" + e.getMessage(), e);
 		}

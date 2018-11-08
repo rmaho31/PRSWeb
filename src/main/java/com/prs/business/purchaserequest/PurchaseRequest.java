@@ -29,7 +29,7 @@ public class PurchaseRequest {
 	public static final String STATUS_NEW = "New";
 	public static final String STATUS_REVIEW = "Review";
 	public static final String STATUS_EDIT = "Edit";
-	public static final String STATUS_APPROVE = "Approve";
+	public static final String STATUS_APPROVE = "Approved";
 	public static final String STATUS_REJECTED = "Rejected";
 
 	public PurchaseRequest() {

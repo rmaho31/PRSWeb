@@ -37,8 +37,8 @@ import com.prs.utility.LocalDateTimeJsonConverter;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class PRSUserTests extends PrsWebApplicationTests {
-	
-	//Tests all basic crud functions
+
+	// Tests all basic crud functions
 	private static int uID = -1;
 	private static int vID = -1;
 	private static int pID = -1;

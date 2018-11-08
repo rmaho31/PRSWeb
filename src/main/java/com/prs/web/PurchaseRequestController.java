@@ -26,7 +26,6 @@ public class PurchaseRequestController {
 
 	@PostMapping(path = "/Add")
 	public @ResponseBody JsonResponse addNewPurchaseRequest(@RequestBody PurchaseRequest pr) {
-		pr.setSubmittedDate(LocalDateTime.now());
 		pr.setStatus(PurchaseRequest.STATUS_NEW);
 		return savePurchaseRequest(pr);
 	}
@@ -56,14 +55,14 @@ public class PurchaseRequestController {
 	@PostMapping(path = "/List/Review")
 	public @ResponseBody JsonResponse getAllPurchaseRequestsForReview(@RequestBody User u) {
 		try {
-			return JsonResponse.getInstance(purchaseRequestRepository.findByUserIdNotAndStatus(u.getId(),
-					PurchaseRequest.STATUS_REVIEW));
+			return JsonResponse.getInstance(
+					purchaseRequestRepository.findByUserIdNotAndStatus(u.getId(), PurchaseRequest.STATUS_REVIEW));
 		} catch (Exception e) {
 			return JsonResponse.getErrorInstance("PurchaseRequest review list failure:" + e.getMessage(), e);
 		}
 	}
 
-	@GetMapping(path = "/SubmitForReview")
+	@PostMapping(path = "/SubmitForReview")
 	public @ResponseBody JsonResponse submitPurchaseRequestsForReview(@RequestBody PurchaseRequest pr) {
 		pr.setSubmittedDate(LocalDateTime.now());
 		if (pr.getTotal() < 51) {
@@ -74,13 +73,13 @@ public class PurchaseRequestController {
 		return savePurchaseRequest(pr);
 	}
 
-	@GetMapping(path = "/List/ApprovePR")
+	@PostMapping(path = "/List/ApprovePR")
 	public @ResponseBody JsonResponse approvePurchaseRequest(@RequestBody PurchaseRequest pr) {
 		pr.setStatus(PurchaseRequest.STATUS_APPROVE);
 		return savePurchaseRequest(pr);
 	}
 
-	@GetMapping(path = "/List/RejectPR")
+	@PostMapping(path = "/List/RejectPR")
 	public @ResponseBody JsonResponse rejectPurchaseRequest(@RequestBody PurchaseRequest pr) {
 		pr.setStatus(PurchaseRequest.STATUS_REJECTED);
 		return savePurchaseRequest(pr);
